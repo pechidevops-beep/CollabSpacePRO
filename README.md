@@ -1,73 +1,121 @@
-# Welcome to your Lovable project
+# CollabSpace
 
-## Project info
+**CollabSpace** is a Next-Generation Developer Collaboration Platform. It functions as a hybrid between GitHub, Google Classroom, and Replit, providing a unified environment for repository management, code execution, real-time collaboration, and classroom assignment tracking.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Features & Updates (Phases 1-3)
 
-## How can I edit this code?
+CollabSpace has been actively developed in phases. Here is everything we've built so far:
 
-There are several ways of editing your application.
+### Core Platform (Phase 1)
+- **Workspaces**: Organize projects and people into distinct organizational units.
+- **Repositories & File Management**: Web-based file explorer to view, upload, download, and delete files. Auto-rendering of `README.md` files using GitHub-Flavored Markdown.
+- **Web IDE & Docker Execution**: Integrated Monaco Editor for writing Python and Java code. Code executes securely in Docker containers (`python:3.11-alpine` and `eclipse-temurin:21-jdk`). An integrated xterm.js terminal displays output and handles STDIN.
+- **Activity Feed**: Real-time event logging on the dashboard (repo creations, PRs, commits, assignments).
+- **User Scoping & Settings**: Personal dashboard stats, profile management, and appearance settings.
 
-**Use Lovable**
+### Version Control Upgrade (Phase 2)
+- **Custom Version Control (`collab` CLI)**: A custom-built, Git-like Node.js CLI tool avoids copyright/patent issues while providing a familiar developer experience (`init`, `check`, `add`, `commit`, `log`, `branch`, `checkout`, `push`, `pull`).
+- **Branching System**: Full backend and CLI support for creating, switching, and pushing to distinct branches.
+- **Pull Requests (PRs)**: A GitHub-style PR system. Browse open/closed PRs, view unified code diffs (with highlighted additions/deletions), leave comments on specific lines, and merge code with automated merge-commits.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### Real-Time & Access Control (Phase 3)
+- **Role-Based Access Control (RBAC)**: Workspaces enforce `admin`, `editor`, and `viewer` roles to restrict destructive actions. Admins can manage member roles via a dedicated UI modal.
+- **Real-Time Collaboration (Yjs)**: The code editor leverages `yjs`, `y-websocket`, and `y-monaco` to allow multiple users to edit the same file simultaneously. Includes real-time cursor tracking and a "who is online" awareness indicator in the toolbar.
+- **Notifications System**: In-app notification bell with unread badges. Users receive alerts when they are added to workspaces, or when PRs are created, commented on, or merged.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 🛠 Tech Stack
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**Frontend:**
+- React 18 / Next.js
+- Tailwind CSS (Styling)
+- Lucide React (Icons)
+- Framer Motion (Animations)
+- Monaco Editor (`@monaco-editor/react`)
+- Xterm.js (Terminal emulator)
+- React Router DOM
+- TanStack Query (Data fetching & caching)
+- Yjs & y-monaco (Real-time sync)
+- `diff` & `react-markdown` (Code diffs and README rendering)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**Backend:**
+- Node.js & Express
+- Supabase (PostgreSQL Database, Authentication, Row Level Security)
+- Docker (Secure, isolated code execution)
+- WebSockets (`ws` and `y-websocket` for terminal output and real-time document sync)
+- Zod (Request payload validation)
 
-Follow these steps:
+**CLI Tool:**
+- Node.js
+- Commander.js (Command parsing)
+- Inquirer (Interactive prompts)
+- Chalk & Ora (Terminal styling and spinners)
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+---
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## 🗄️ Database Architecture (Supabase PostgreSQL)
 
-# Step 3: Install the necessary dependencies.
-npm i
+The database relies heavily on relational integrity and Row Level Security (RLS) to ensure users only see their organization's data.
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+**Key Tables:**
+- `workspaces`: High-level organizations (requires join codes).
+- `workspace_members`: Links users to workspaces, includes RBAC `role` (`admin`, `editor`, `viewer`).
+- `repositories`: Code projects belonging to a workspace.
+- `repo_files`: The latest state of files in a repository.
+- `commits` & `commit_files`: Immutable history of changes (hash, message, branch, author).
+- `branches`: Local and remote branch references.
+- `pull_requests` & `pr_comments`: Review system data linking source and target branches.
+- `assignments` & `submissions`: For the Classroom aspect of the platform.
+- `activity_logs`: Audit trail for the dashboard feed.
+- `notifications`: User-specific alerts linked to actions.
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 💻 CLI Usage Guide
 
-**Use GitHub Codespaces**
+The `collab` CLI tool provides a familiar interface for managing your code locally.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Setup
+1. Open a terminal in your project directory.
+2. Login: `collab login`
+3. Initialize the repo: `collab init <workspace-id> <repo-name>`
+4. Set origin (if cloning): `collab remote add origin <repo-id>`
 
-## What technologies are used for this project?
+### Daily Workflow
+- **Check Status**: `collab status` (or `collab check`) - View modified/new files.
+- **Stage Files**: `collab add .` (or `collab add <file>`)
+- **Commit**: `collab commit -m "Your message"`
+- **Push**: `collab push origin <branch>`
+- **Pull**: `collab pull origin <branch>`
 
-This project is built with:
+### Branching
+- **List Branches**: `collab branch`
+- **Create Branch**: `collab branch <new-branch> [source-branch]`
+- **Switch Branch**: `collab checkout <branch>`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## 🏃‍♂️ How to Run the Project Locally
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+1. **Start the Backend:**
+   Ensure Docker Desktop is running (required for code execution).
+   ```bash
+   cd backend
+   npm run dev
+   ```
+   *The backend runs on `http://localhost:5000`. It spans both REST API routes and WebSocket servers (on `/ws/terminal` and `/ws/yjs/`).*
 
-## Can I connect a custom domain to my Lovable project?
+2. **Start the Frontend:**
+   Open a new terminal.
+   ```bash
+   npm run dev
+   ```
+   *The frontend runs usually on `http://localhost:5173`.*
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+3. **Install the CLI globally (Optional):**
+   ```bash
+   cd cli
+   npm link
+   ```
+   *You can now type `collab` from any directory on your computer.*

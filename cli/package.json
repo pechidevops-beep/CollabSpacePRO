@@ -1,0 +1,17 @@
+{
+    "name": "collabspace-cli",
+    "version": "1.0.0",
+    "description": "CollabSpace Version Control CLI — collab init, add, commit, push, pull",
+    "type": "module",
+    "bin": {
+        "collab": "./bin/collab.js"
+    },
+    "scripts": {
+        "start": "node bin/collab.js"
+    },
+    "dependencies": {
+        "chalk": "^5.3.0",
+        "commander": "^12.0.0",
+        "ora": "^8.0.0"
+    }
+}

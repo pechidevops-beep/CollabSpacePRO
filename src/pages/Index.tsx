@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { ArrowRight, Code2, GitBranch, GraduationCap, Play, Shield, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import logoWings from "@/assets/logo-wings.png";
+
 const features = [
   {
     icon: GitBranch,
@@ -53,10 +55,8 @@ const Index = () => {
       <nav className="fixed top-0 inset-x-0 z-50 glass-strong">
         <div className="container flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Code2 className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <span className="text-lg font-bold text-foreground">CollabSpace</span>
+            <img src={logoWings} alt="CollabSpace Logo" className="h-10 w-10 object-contain" />
+            <span className="text-xl font-bold text-foreground tracking-tight">CollabSpace</span>
           </Link>
           <div className="flex items-center gap-3">
             <Link to="/dashboard">
@@ -84,7 +84,7 @@ const Index = () => {
               Now in Beta — Start building today
             </div>
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.1]">
-              Code. Collaborate.
+              CollabSpace
               <br />
               <span className="gradient-text">Execute.</span>
             </h1>
